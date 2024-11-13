@@ -48,6 +48,10 @@
         display: flex;
         gap: 15px;
       }
+      .footer a {
+        text-decoration: none;
+        color: inherit;
+      }
       .cart-links {
         display: flex;
         gap: 1rem;
@@ -229,7 +233,7 @@
       </div>
     </div>
     <div class="footer">
-      <p>Home | Location | Returns | Careers | Mobile App | Solidworks Add-In | Help | Settings</p>
+      <p>Home | Location | Returns | <a href="https://shopify.com/careers">Careers</a> | <a style="display: inline-flex; align-items: center; vertical-align: middle;" href="https://github.com/shopify/mcliquid-theme"><img width="16" height="16" src="{{'github_favicon.svg'| asset_url}}" style="margin-right: 4px; vertical-align: middle;"> shopify/mcliquid-theme</a></p>
     </div>
     <script src="{{ 'instant.page.js' | asset_url }}" type="module" async defer></script>
 
