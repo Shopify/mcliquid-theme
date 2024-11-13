@@ -1,0 +1,27 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "text_color": "#947373",
+    "accent_color": "#1a290b",
+    "bg_color": "#ffffff",
+    "regular_font": "Helvetica, Arial, sans-serif",
+    "header_font": "Theme.liquid",
+    "customer_layout": "customer_area",
+    "checkout_banner_background_color": "#fff",
+    "checkout_accent_color": "#2a9dcc",
+    "checkout_button_color": "#2a9dcc",
+    "checkout_call_to_action_color": "#8fc243",
+    "checkout_logo": "",
+    "checkout_use_header_image": false
+  },
+  "presets": {
+  }
+}

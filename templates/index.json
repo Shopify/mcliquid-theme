@@ -1,0 +1,38 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "homepage": {
+      "type": "homepage",
+      "blocks": {
+        "column_rxH6JQ": {
+          "type": "column",
+          "repeater": "{{ shop.metaobjects.category_metaobject['hardware'].children_categories.value }}",
+          "settings": {
+            "image": "{{ block.repeater.image.value }}",
+            "title": "{{ block.repeater.name.value }}",
+            "description": "<p>{{ block.repeater.description | metafield_tag }}</p>",
+            "link_label": "",
+            "link": "{{ block.repeater.system.url }}",
+            "children_categories": "{{ block.repeater.children_categories.value }}"
+          }
+        }
+      },
+      "block_order": [
+        "column_rxH6JQ"
+      ],
+      "settings": {
+      }
+    }
+  },
+  "order": [
+    "homepage"
+  ]
+}

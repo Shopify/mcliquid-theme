@@ -1,0 +1,111 @@
+{% stylesheet %}
+  .card {
+    display: flex;
+    font-size: 0.8rem;
+    gap: 0.5rem;
+    border: 1px solid lightgrey;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    color: black;
+  }
+  .card:hover {
+    background-color: lightgrey;
+  }
+  .card:hover .card__title {
+    text-decoration: underline;
+  }
+  .card__image {
+  }
+  .card__content {
+    flex: 2;
+  }
+  .card__title {
+    font-size: 0.8rem;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+    gap: 0.5rem;
+    margin: 0.5rem;
+  }
+{% endstylesheet %}
+
+{% if section.blocks.size > 0 %}
+  <h1 class="sticky-header">
+    All Categories >
+    {{ section.settings.collection.title }} ({{ section.blocks.size }}
+    {{ section.blocks.size | pluralize: 'category', 'categories' }})
+  </h1>
+{% endif %}
+
+{% if section.blocks.size > 0 %}
+  <div class="grid">
+    {%- for block in section.blocks -%}
+      {% for child in block.settings.next_children %}
+        <link rel="preload" as="image" href="{{ child.image | image_url: width: 150 }}">
+      {% endfor %}
+      <a href="{{ block.settings.link }}" class="card">
+        <div class="card__image">
+          {{ block.settings.image | image_url: width: 150 | image_tag: alt: block.settings.title }}
+        </div>
+        <div class="card__content">
+          <div class="card__title">{{ block.settings.title | split: ' > ' | last }}</div>
+          <div class="card__description">{{ block.settings.description }}</div>
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Category Multicolumn",
+  "class": "section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Column",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.multicolumn.blocks.column.settings.image.label"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "t:sections.multicolumn.blocks.column.settings.title.label"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "description text"
+        },
+        {
+          "type": "metaobject_list",
+          "id": "next_children",
+          "metaobject_type": "category_metaobject",
+          "label": "next children"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "link url"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

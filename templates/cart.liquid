@@ -1,0 +1,176 @@
+<script>
+  <!--
+  function remove_item(id)
+  {
+      document.getElementById('updates_'+id).value = 0;
+      document.getElementById('cart').submit();
+  }
+  -->
+</script>
+
+<div class="cart-container">
+  <h1 class="section-title">Order</h1>
+  <div class="cart-content">
+    {% if cart.item_count == 0 %}
+      <div class="alertbox">
+        <div class="alertcontent">
+          <strong>Your shopping cart is empty</strong>
+
+          <p>Note that this can happen if you disabled cookies in your browser</p>
+          <p>We strongly recommends to enable cookies. Many webpages need them to work properly.</p>
+
+          <p>{{ 'Back to frontpage' | link_to: '/' }}</p>
+        </div>
+      </div>
+
+    {% else %}
+      <form class="cart-form" action="/cart" id="cart" method="post">
+        <div id="shoppingcart">
+          {% for item in cart.items %}
+            <div class="itemrow">
+              <div class="itemrow-product">
+                {{
+                  item.product.featured_image
+                  | asset_img_url: 'pico'
+                  | img_tag: item.product.title, 'cart-image', '100x100'
+                }}
+                <div>
+                  <h2 class="itemrow-product-title">{{ item.product.title }}</h2>
+                  <p>
+                    {{ item.variant.title }}
+                  </p>
+                  <p>
+                    {{ item.variant.sku }}
+                  </p>
+                </div>
+              </div>
+              <div>
+                <input
+                  type="text"
+                  size="4"
+                  name="updates[]"
+                  id="updates_{{item.id}}"
+                  value="{{item.quantity}}"
+                  onfocus="this.select();"
+                >
+              </div>
+              <div>{{ item.price | money }}</div>
+              <div align="right">{{ item.final_line_price | money }}</div>
+              <div><a href="#" onclick="remove_item({{item.id}});" class="remove">remove</a></div>
+            </div>
+          {% endfor %}
+          <input type="image" src="{{'b_update.gif'| asset_url}}" value="Update Cart">
+        </div>
+
+        <div class="checkout-buttons">
+          <div>
+            Merchandise {{ cart.total_price | money }}
+            {{ shop.currency }}
+          </div>
+          {{ content_for_additional_checkout_buttons }}
+        </div>
+      </form>
+    {% endif %}
+
+    <ul>
+      <li><strong>This store is only for demonstration purposes. No items will be shipped</strong></li>
+    </ul>
+  </div>
+</div>
+
+{% style %}
+  .cart-container {
+    padding: 0 1rem;
+  }
+  .cart-content {
+    padding-top: 2rem;
+  }
+  .cart-image {
+    height: 100px;
+    width: 100px;
+  }
+  .section-title {
+    font-size: 1rem;
+    font-weight: normal;
+    margin: 0;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    border-bottom: 1px solid black;
+    padding: 0.5rem;
+  }
+  .cart-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .itemrow {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .itemrow-product {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    flex-shrink: 0;
+    flex-grow: 0;
+  }
+  .itemrow-product p {
+    margin: 0;
+    color: grey;
+    font-size: 0.8rem;
+  }
+  .itemrow-product-title {
+    font-size: 1rem;
+    margin: 0;
+  }
+  #shoppingcart {
+    flex: 1;
+  }
+  .checkout-buttons {
+    flex-shrink: 0;
+    border-left: 1px solid lightgrey;
+    padding-left: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .checkout-buttons input {
+    background-color: #363;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 768px) {
+    .itemrow {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    #shoppingcart {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .cart-form {
+      flex-direction: column;
+    }
+
+    .checkout-buttons {
+      border-left: none;
+      padding-left: 0;
+    }
+  }
+{% endstyle %}

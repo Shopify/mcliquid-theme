@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>McLiquid</title>
+    <link rel="icon" type="image/png" href="{{ 'favicon.png' | asset_url }}">
+    {% comment %} layout/theme.liquid cannot have a stylesheet tag. {% endcomment %}
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: Arial, sans-serif;
+      }
+
+      .header {
+        background-color: #f8f8f8;
+        padding: 0.5rem;
+        border-bottom: 2px solid #f0c040;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 2em;
+      }
+      .header .logo {
+        font-size: 24px;
+        font-weight: bold;
+        color: #2e7d32;
+      }
+      .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 2em;
+        flex-grow: 1;
+      }
+      .header .search {
+        flex-grow: 1;
+      }
+      .header .search input {
+        width: 100%;
+        padding: 5px;
+        font-size: 16px;
+      }
+      .header .links {
+        display: flex;
+        gap: 15px;
+      }
+      .cart-links {
+        display: flex;
+        gap: 1rem;
+      }
+      .cart-links a {
+        text-decoration: none;
+        color: #2e7d32;
+        text-transform: uppercase;
+        font-weight: bold;
+      }
+      .cart-links a:hover {
+        text-decoration: underline;
+      }
+      body {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .container {
+        display: flex;
+        flex-grow: 1;
+        overflow-y: hidden;
+      }
+      .sidebar {
+        width: 250px;
+        background-color: #f0f0f0;
+        border-right: 1px solid #ddd;
+        height: 100%;
+        flex-shrink: 0;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          display: none;
+        }
+
+        .header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+        }
+
+        .header-row {
+          width: 100%;
+        }
+      }
+
+      .main-content {
+        flex-grow: 1;
+        height: 100%;
+        overflow-y: auto;
+      }
+      .main-content h2 {
+        margin-top: 0;
+      }
+      .main-content .items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      .main-content .item {
+        width: 100px;
+        text-align: center;
+      }
+      .main-content .item img {
+        width: 100%;
+        height: auto;
+      }
+      .footer {
+        background-color: #f8f8f8;
+        padding: 10px;
+        text-align: center;
+        border-top: 1px solid black;
+      }
+      .sidebar ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .sidebar ul li a {
+        text-decoration: none;
+        color: #333; /* Dark gray color */
+        font-size: 0.8rem;
+        transition: color 0.3s ease;
+      }
+      .sidebar ul li a:hover {
+        color: #2e7d32; /* Green color on hover */
+      }
+
+      .sticky-header {
+        font-size: 1rem;
+        font-weight: normal;
+        margin: 0;
+        position: sticky;
+        top: 0;
+        background-color: white;
+        border-bottom: 1px solid black;
+        padding: 0.5rem;
+        z-index: 1;
+      }
+
+      .categories {
+        height: 100%;
+        overflow-y: auto;
+        padding: 0.5rem;
+      }
+
+      @view-transition {
+        navigation: auto;
+      }
+
+      ::view-transition-old(*) {
+        animation: fade 50ms ease-in forwards;
+      }
+
+      /* New stuff coming in */
+      ::view-transition-new(*) {
+        animation: fade 50ms ease-in reverse;
+      }
+
+      @keyframes fade {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+        }
+      }
+    </style>
+    {{ content_for_header }}
+  </head>
+  <body data-instant-mousedown-shortcut data-instant-intensity="viewport-all">
+    <nav class="header">
+      <div class="logo"><a href="/" style="text-decoration: none; color: #2e7d32">McLiquid-Carr</a></div>
+      <div class="header-row">
+        <div class="search">
+          <form method="get" action="{{ routes.search_url }}">
+            <input
+              type="text"
+              placeholder="Search"
+              name="q"
+              value="{{ search.terms | escape }}"
+            >
+          </form>
+        </div>
+        <div class="cart-links">
+          <a href="/cart"
+            >Order (<span
+              {% comment %} Note: #cart-item-count is updated from single-collection.liquid when products are added to cart {% endcomment %}
+              id="cart-item-count"
+            >
+              {{- cart.items.size -}}</span
+            >)</a
+          >
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      {% if template.name != 'cart' %}
+        <div class="sidebar">
+          <h3 class="sticky-header" style="background-color: inherit">Choose a Category</h3>
+          <div class="categories">
+            <ul>
+              {% for child in shop.metaobjects.category_metaobject.hardware.children_categories.value %}
+                <li>
+                  <a href="{{ child.system.url }}">{{ child.name }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      {% endif %}
+      <div class="main-content">
+        {{ content_for_layout }}
+      </div>
+    </div>
+    <div class="footer">
+      <p>Home | Location | Returns | Careers | Mobile App | Solidworks Add-In | Help | Settings</p>
+    </div>
+    <script src="{{ 'instant.page.js' | asset_url }}" type="module" async defer></script>
+
+    <script type="speculationrules">
+      {
+        "prefetch": [
+          {
+            "source": "document",
+            "eagerness": "conservative",
+            "where": {
+              "and": [
+                { "href_matches": "/*" },
+                { "not": { "href_matches": "/(a|apps|community|tools)/*" } },
+                { "not": { "href_matches": "/*/(a|apps|community|tools)/*" } },
+                { "not": { "href_matches": "/account/logout" } },
+                { "not": { "href_matches": "/*/account/logout" } },
+                { "not": { "href_matches": "/cart/(.+)" } },
+                { "not": { "href_matches": "/*/cart/(.+)" } }
+              ]
+            }
+          }
+        ]
+      }
+    </script>
+  </body>
+</html>

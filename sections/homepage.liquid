@@ -1,0 +1,118 @@
+<style>
+  .small_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
+    gap: 0.5rem;
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .small_grid img {
+    border: 1px solid lightgrey;
+    max-width: 100%;
+    object-fit: cover;
+  }
+
+  .small_grid a {
+    text-decoration: none;
+    color: black;
+  }
+
+  .small_grid a:hover {
+    text-decoration: underline;
+  }
+
+  .small_grid a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
+    font-size: 0.8rem;
+  }
+
+  .category {
+    padding: 0.5rem;
+  }
+
+  .small_grid_title {
+    font-size: 1.25rem;
+    font-weight: normal;
+    color: #285028;
+  }
+</style>
+
+<h1 class="sticky-header">All Categories</h1>
+
+{%- for block in section.blocks -%}
+  <div class="category">
+    <h1 class="small_grid_title" href="{{ block.settings.link }}">
+      {{ block.settings.title | split: ' > ' | last }}
+    </h1>
+    <ul class="small_grid">
+      {%- for child in block.settings.children_categories -%}
+        {%- assign child_title_parts = child.name | split: ' > ' -%}
+        {%- if child_title_parts.size == 2 -%}
+          <!-- Check if there is only one ">" -->
+          <li>
+            <a href="{{ child.system.url }}">
+              {{ child.image | image_url: width: 100 | image_tag: alt: child.title }}
+              <div>{{ child_title_parts[1] }}</div>
+              <!-- Use the second part after the first " > " -->
+            </a>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endfor -%}
+
+{% schema %}
+{
+  "name": "Homepage",
+  "class": "section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Column",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "image"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "title"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "description text"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "link label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "link url"
+        },
+        {
+          "type": "metaobject_list",
+          "metaobject_type": "category_metaobject",
+          "id": "children_categories",
+          "label": "children categories"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

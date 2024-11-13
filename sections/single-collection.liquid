@@ -1,0 +1,195 @@
+{% assign collection_products = section.settings.collection.products %}
+{% if collection_products.size > 0 %}
+  <h1 class="sticky-header">
+    All Categories >
+    {{ section.settings.collection.title }} ({{ collection_products.size }}
+    {{ collection_products.size | pluralize: 'product', 'products' }})
+  </h1>
+
+  <div class="product-collection" style="font-family: Arial, sans-serif;">
+    {% for product in collection_products %}
+      <div class="product-container">
+        <span id="{{ product.handle }}" class="hash-handle"></span>
+        <h3 class="product-title">{{ product.title }}</h3>
+        <p class="product-description">{{ product.description | strip_html | truncatewords: 30 }}</p>
+
+        <div class="product-details">
+          <div class="image-placeholder">
+            {% if product.featured_image %}
+              {{ product.featured_image | image_url: width: 100 | image_tag: alt: product.featured_image.alt }}
+            {% endif %}
+          </div>
+          <table class="variant-table">
+            <thead>
+              <tr>
+                <th class="desktop-only">SKU</th>
+                <th class="desktop-only">{{ product.options[0] }}</th>
+                {% if product.options[1] %}
+                  <th class="desktop-only">{{ product.options[1] }}</th>
+                {% endif %}
+                <th>Model</th>
+                <th class="desktop-only">Net Weight</th>
+                <th>Each</th>
+                <th>Buy</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for variant in product.variants %}
+                <tr class="variant-row">
+                  <td class="desktop-only">{{ variant.sku }}</td>
+                  <td class="desktop-only">{{ variant.option1 }}</td>
+                  {% if variant.option2 %}
+                    <td class="desktop-only">{{ variant.option2 }}</td>
+                  {% endif %}
+                  <td>{{ variant.title }}</td>
+                  <td class="desktop-only">{{ variant.weight | default: 'N/A' }}g</td>
+
+                  <td>{{ variant.price | money }}</td>
+                  <td>
+                    <form class="add-to-cart-form" method="post" action="/cart/add">
+                      <input type="hidden" name="id" value="{{ variant.id }}">
+                      <input min="1" type="number" id="quantity" name="quantity" value="1">
+                      <input type="submit" value="Add to cart" class="add-button">
+                      <input type="submit" value="Added!" class="added-button" disabled>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .desktop-only {
+    display: none;
+  }
+  @media (min-width: 768px) {
+    .desktop-only {
+      display: table-cell;
+    }
+  }
+  .product-collection {
+    font-family: Arial, sans-serif;
+  }
+  .collection-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  .product-count {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  .product-container {
+    margin-bottom: 20px;
+    padding: 10px;
+    position: relative;
+  }
+  .hash-handle {
+    visibility: hidden;
+    top: -35px;
+    position: absolute;
+  }
+  .product-title {
+    font-size: 18px;
+    color: green;
+  }
+  .product-description {
+    font-size: 12px;
+  }
+  .product-details {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .image-placeholder {
+    width: 100px;
+    height: 100px;
+    margin-right: 10px;
+  }
+  .image-placeholder img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  .variant-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th,
+  td {
+    text-align: left; /* Left-align headers and cells */
+    padding: 4px; /* Tighter line height */
+    font-size: 12px;
+  }
+  .variant-row:hover {
+    background-color: #fff5b1; /* Pale yellow background on hover */
+  }
+
+  .add-to-cart-form input[type='number'] {
+    width: 2rem;
+  }
+
+  .added-button {
+    display: none;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', function () {
+    // Dynamically add items to the cart without reloading the page
+    document.querySelectorAll('.add-to-cart-form').forEach((form) => {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+
+        fetch(window.Shopify.routes.root + 'cart/add.js', {
+          method: 'POST',
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            form.querySelector('.add-button').style.display = 'none';
+            form.querySelector('.added-button').style.display = 'inline-block';
+            setTimeout(() => {
+              form.querySelector('.added-button').style.display = 'none';
+              form.querySelector('.add-button').style.display = 'inline-block';
+            }, 2000);
+            // Update the cart item count in the page header
+            fetch(window.Shopify.routes.root + 'cart.js', {
+              method: 'GET',
+            })
+              .then((response) => response.json())
+              .then((cart) => {
+                document.querySelector('#cart-item-count').textContent = cart.items.length;
+              });
+          })
+          .catch((error) => {
+            console.error('Error adding item to cart:', error);
+          });
+      });
+    });
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Single Collection View",
+  "class": "section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    }
+  ]
+}
+{% endschema %}

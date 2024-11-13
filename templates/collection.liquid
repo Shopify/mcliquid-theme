@@ -1,0 +1,40 @@
+<div id="collectionpage">
+  {% paginate collection.products by 20 %}
+    <div id="pagination">
+      {{ paginate | default_pagination }}
+    </div>
+
+    <h2><a href="/">Collection</a> &rarr; {{ collection.title }}</h2>
+
+    {% for product in collection.products %}
+      <div class="feature">
+        <h2>
+          <a href="{{product.url}}">{{ product.vendor }}: {{ product.title }}</a>
+        </h2>
+
+        <table>
+          <tr>
+            <td>
+              <a href="{{product.url}}" class="feature-image">
+                <img width="50" height="50" src="{{ product.featured_image | asset_img_url: 'medium' }}" alt="{{ product.title }}"/>
+              </a>
+            </td>
+
+            <td>
+              <div class="feature-price tag">
+                {{ product.price_min | money }}
+                <span class="currency">{{ shop.currency }}</span>
+              </div>
+
+              <div class="description">{{ product.description | strip_html | truncatewords: 35 }}</div>
+
+              <p>
+                <a href="{{product.url}}"><strong>Read more...</strong></a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    {% endfor %}
+  {% endpaginate %}
+</div>
