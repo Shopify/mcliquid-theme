@@ -236,27 +236,5 @@
       <p>Home | Location | Returns | <a href="https://shopify.com/careers">Careers</a> | <a style="display: inline-flex; align-items: center; vertical-align: middle;" href="https://github.com/shopify/mcliquid-theme"><img width="16" height="16" src="{{'github_favicon.svg'| asset_url}}" style="margin-right: 4px; vertical-align: middle;"> shopify/mcliquid-theme</a></p>
     </div>
     <script src="{{ 'instant.page.js' | asset_url }}" type="module" async defer></script>
-
-    <script type="speculationrules">
-      {
-        "prefetch": [
-          {
-            "source": "document",
-            "eagerness": "conservative",
-            "where": {
-              "and": [
-                { "href_matches": "/*" },
-                { "not": { "href_matches": "/(a|apps|community|tools)/*" } },
-                { "not": { "href_matches": "/*/(a|apps|community|tools)/*" } },
-                { "not": { "href_matches": "/account/logout" } },
-                { "not": { "href_matches": "/*/account/logout" } },
-                { "not": { "href_matches": "/cart/(.+)" } },
-                { "not": { "href_matches": "/*/cart/(.+)" } }
-              ]
-            }
-          }
-        ]
-      }
-    </script>
   </body>
 </html>
