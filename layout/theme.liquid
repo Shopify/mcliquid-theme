@@ -162,28 +162,6 @@
         overflow-y: auto;
         padding: 0.5rem;
       }
-
-      @view-transition {
-        navigation: auto;
-      }
-
-      ::view-transition-old(*) {
-        animation: fade 50ms ease-in forwards;
-      }
-
-      /* New stuff coming in */
-      ::view-transition-new(*) {
-        animation: fade 50ms ease-in reverse;
-      }
-
-      @keyframes fade {
-        from {
-          opacity: 1;
-        }
-        to {
-          opacity: 0;
-        }
-      }
     </style>
     {{ content_for_header }}
   </head>
@@ -233,7 +211,20 @@
       </div>
     </div>
     <div class="footer">
-      <p>Home | Location | Returns | <a href="https://shopify.com/careers">Careers</a> | <a style="display: inline-flex; align-items: center; vertical-align: middle;" href="https://github.com/shopify/mcliquid-theme"><img width="16" height="16" src="{{'github_favicon.svg'| asset_url}}" style="margin-right: 4px; vertical-align: middle;"> shopify/mcliquid-theme</a></p>
+      <p>
+        Home | Location | Returns | <a href="https://shopify.com/careers">Careers</a> |
+        <a
+          style="display: inline-flex; align-items: center; vertical-align: middle;"
+          href="https://github.com/shopify/mcliquid-theme"
+          ><img
+            width="16"
+            height="16"
+            src="{{'github_favicon.svg'| asset_url}}"
+            style="margin-right: 4px; vertical-align: middle;"
+          >
+          shopify/mcliquid-theme</a
+        >
+      </p>
     </div>
     <script type="speculationrules">
       {
@@ -241,14 +232,14 @@
           {
             "source": "document",
             "eagerness": "eager",
-            "where": {"selector_matches": ".prefetch" }
+            "where": { "selector_matches": ".prefetch" }
           }
         ],
         "prerender": [
           {
             "source": "document",
             "eagerness": "moderate",
-            "where": {"selector_matches": ".prefetch" }
+            "where": { "selector_matches": ".prefetch" }
           }
         ]
       }
