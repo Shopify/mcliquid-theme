@@ -45,7 +45,7 @@
       {% for child in block.settings.next_children %}
         <link rel="preload" as="image" href="{{ child.image | image_url: width: 150 }}">
       {% endfor %}
-      <a href="{{ block.settings.link }}" class="card">
+      <a href="{{ block.settings.link }}" class="card prefetch">
         <div class="card__image">
           {{ block.settings.image | image_url: width: 150 | image_tag: alt: block.settings.title }}
         </div>
