@@ -1,3 +1,5 @@
+> **This repository is no longer maintained.** It has been archived and receives no updates or security fixes.
+
 # McLiquid Shopify Theme
 
 The McLiquid Theme is for demonstration purposes. It is built by Shopify to highlight some of the platform's key features and highlight the performance of the platform. 
